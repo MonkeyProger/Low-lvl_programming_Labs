@@ -1,0 +1,20 @@
+# "Фиктивные" цели
+.PHONY: all
+# Файлы для сборки исполняемого файла
+objs = findCoeffs.c
+CC =  riscv64-unknown-elf-gcc
+AR = riscv64-unknown-elf-ar
+# Параметры компиляции
+CFLAGS = -march=rv64iac -mabi=lp64 -O1 -c
+# Включаемые файлы следует искать в текущем каталоге
+INCLUDES+= -I .
+# Утилита make должна искать файлы *.c и *.h в текущей директории
+vpath %.c .
+vpath %.h .
+# Сборка объектных файлов
+%.o : $(objs)
+	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
+all : libFindCoeffs.a
+libFindCoeffs.a : findCoeffs.o
+	$(AR) -rsc $@ $<
+	del *.o *.i *.s
